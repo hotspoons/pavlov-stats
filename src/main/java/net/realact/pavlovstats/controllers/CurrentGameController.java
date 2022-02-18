@@ -118,7 +118,7 @@ public class CurrentGameController {
             if(kdaSplit.length == 3){
                 kda.setKills(Integer.parseInt(kdaSplit[0]));
                 kda.setDeaths(Integer.parseInt(kdaSplit[1]));
-                kda.setAssists(Integer.parseInt(kdaSplit[0]));
+                kda.setAssists(Integer.parseInt(kdaSplit[2]));
             }
         }
         return kda;
