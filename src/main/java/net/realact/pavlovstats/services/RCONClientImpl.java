@@ -82,9 +82,13 @@ public class RCONClientImpl implements RCONClient{
         String response = "";
         try{
             response = this.getResponse();
-            return objectMapper.readValue(response, responseType);
+            logger.info("Reponse should be in {} format for {} command, yet it is this: {}",
+                    responseType.getTypeName(), command.toCommand(), response);
+            T responseObject = objectMapper.readValue(response, responseType);
+            return responseObject;
         }
         catch(JsonProcessingException e){
+            logger.error("Could not deserialize response, got this garbage instead: " + response);
             return (T) command;
         }
     }
@@ -102,7 +106,7 @@ public class RCONClientImpl implements RCONClient{
         }
         while (inputStream.available() > 0);
         String responseString = response.toString();
-        logger.info("getResponse took " + (new Date().getTime() - start) + " ms and contained: \n\n" + responseString);
+         //logger.info("getResponse took " + (new Date().getTime() - start) + " ms and contained: \n\n" + responseString);
         return responseString;
     }
 
