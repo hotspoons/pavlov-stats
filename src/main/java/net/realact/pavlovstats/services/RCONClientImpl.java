@@ -1,5 +1,6 @@
 package net.realact.pavlovstats.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.realact.pavlovstats.config.AppConfig;
 import net.realact.pavlovstats.models.commands.Command;
@@ -38,7 +39,6 @@ public class RCONClientImpl implements RCONClient{
 
     private Socket clientSocket;
     private PrintWriter writer;
-    private BufferedReader reader;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -79,22 +79,37 @@ public class RCONClientImpl implements RCONClient{
         this.awaitNextCommand();
         this.writer.write(command.toCommand());
         this.writer.flush();
-        return objectMapper.readValue(this.getResponse(), responseType);
+        String response = "";
+        try{
+            response = this.getResponse();
+            return objectMapper.readValue(response, responseType);
+        }
+        catch(JsonProcessingException e){
+            return (T) command;
+        }
     }
 
     private String getResponse() throws IOException {
-        List<String> response = new ArrayList<>();
-        String inputLine;
-        while((inputLine = this.reader.readLine()) != null){
-            response.add(inputLine);
+        long start = new Date().getTime();
+        StringBuilder response = new StringBuilder();
+        InputStream inputStream = this.clientSocket.getInputStream();
+        do{
+            int c = inputStream.read();
+            if (c > -1){
+                response.append((char) c);
+            }
+            else throw new EOFException();
         }
-        String responseString = String.join("\n", response);
+        while (inputStream.available() > 0);
+        String responseString = response.toString();
+        logger.info("getResponse took " + (new Date().getTime() - start) + " ms and contained: \n\n" + responseString);
         return responseString;
     }
 
     private void auth() throws IOException {
         this.writer.write(this.password);
         this.writer.flush();
+        this.awaitNextCommand();
         String response = this.getResponse();
         if(response.contains("Authenticated=1") == false){
             throw new IOException("Could not authenticate - response: " + response);
@@ -105,7 +120,6 @@ public class RCONClientImpl implements RCONClient{
         if(this.connected == false){
             this.clientSocket = new Socket(this.host, this.port);
             this.writer = new PrintWriter(this.clientSocket.getOutputStream(), true);
-            this.reader = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
             String response = this.getResponse();
 
             if(response.contains("Password")){
@@ -151,9 +165,9 @@ public class RCONClientImpl implements RCONClient{
             }
 
         }
-        else if(tsDifference > timespan){
+        else if(timespan > tsDifference){
             try {
-                Thread.sleep(tsDifference - timespan);
+                Thread.sleep(timespan - tsDifference);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

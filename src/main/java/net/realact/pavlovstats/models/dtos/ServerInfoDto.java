@@ -12,7 +12,7 @@ public class ServerInfoDto {
     private String roundState;
     private String playerCount;
 
-    @JsonProperty("")
+    @JsonProperty("MapLabel")
     public String getMapLabel() {
         return mapLabel;
     }
