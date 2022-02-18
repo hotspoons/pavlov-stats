@@ -38,7 +38,7 @@ public abstract class Command {
     public String toCommand() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(this.command);
-        if(this.args != null){
+        if(this.args != null && this.args.size() > 0){
             stringBuilder.append(" ");
             stringBuilder.append(String.join(" ", this.args));
 

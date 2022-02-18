@@ -26,11 +26,11 @@ public class CurrentGameController {
 
     @GetMapping("/current-users")
     public Object getCurrentUsers() throws IOException {
-        RefreshListCommand rlc = rconClient.executeCommand(new RefreshListCommand(), RefreshListCommand.class);
+        RefreshListCommand rlc = rconClient.send(new RefreshListCommand(), RefreshListCommand.class);
         List<PlayerInfoDto> playerInfoList = new ArrayList<>();
         List<PlayerDto> players = rlc.getPlayerList();
         for(PlayerDto player: players){
-            InspectPlayerCommand ipc = rconClient.executeCommand(new InspectPlayerCommand(player.getUniqueId()),
+            InspectPlayerCommand ipc = rconClient.send(new InspectPlayerCommand(player.getUniqueId()),
                     InspectPlayerCommand.class);
             playerInfoList.add(ipc.getPlayerInfo());
         }

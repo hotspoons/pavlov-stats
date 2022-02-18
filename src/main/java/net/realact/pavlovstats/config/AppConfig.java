@@ -10,6 +10,7 @@ public class AppConfig {
     private int rconPort;
     private String rconPassword;
     private long rconCommandSleeps;
+    private long rconTimeout;
 
     public String getRconHost() {
         return rconHost;
@@ -41,5 +42,13 @@ public class AppConfig {
 
     public void setRconCommandSleeps(long rconCommandSleeps) {
         this.rconCommandSleeps = rconCommandSleeps;
+    }
+
+    public long getRconTimeout() {
+        return rconTimeout;
+    }
+
+    public void setRconTimeout(long rconTimeout) {
+        this.rconTimeout = rconTimeout;
     }
 }
