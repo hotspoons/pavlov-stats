@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ScoreboardService {
-    Scoreboard getScoreboard() throws IOException;
-
+    Scoreboard getScoreboardFromRCON() throws IOException;
     void saveScoreboard(Scoreboard scoreboard);
-
     Scoreboard getById(String id);
-
     List<Scoreboard> getAll();
+
+    Scoreboard getCurrentScoreboard();
+    void setCurrentScoreboard(Scoreboard scoreboard);
 }

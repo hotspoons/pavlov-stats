@@ -17,7 +17,6 @@ public class ServerPollServiceImpl implements ServerPollService{
 
     private final static Logger logger = LoggerFactory.getLogger(ServerPollServiceImpl.class);
 
-    private Scoreboard currentScoreboard;
 
     public ServerPollServiceImpl(RCONClient rconClient, RconDataConverter rconDataConverter,
                                  ScoreboardService scoreboardService, PlayerService playerService){
@@ -32,12 +31,12 @@ public class ServerPollServiceImpl implements ServerPollService{
     @Scheduled(fixedDelayString = "${appconfig.server-polling-interval}")
     public void poll(){
         try {
-            Scoreboard scoreboard = scoreboardService.getScoreboard();
+            Scoreboard scoreboard = scoreboardService.getScoreboardFromRCON();
             if(!this.isSameScoreboard(scoreboard)){
                 scoreboardService.saveScoreboard(scoreboard);
             }
-            playerService.updatePlayerStats(scoreboard, currentScoreboard);
-            this.currentScoreboard = scoreboard;
+            playerService.updatePlayerStats(scoreboard, scoreboardService.getCurrentScoreboard());
+            scoreboardService.setCurrentScoreboard(scoreboard);
         } catch (IOException e) {
             logger.error(e.getMessage());
             // If we get an IOException, reset the connection, it could be transient
@@ -55,10 +54,12 @@ public class ServerPollServiceImpl implements ServerPollService{
     }
 
     private boolean isSameScoreboard(Scoreboard scoreboard) {
-        if(this.currentScoreboard == null){
-            this.currentScoreboard = scoreboard;
+        Scoreboard currentScoreboard = scoreboardService.getCurrentScoreboard();
+        if(currentScoreboard == null){
+            scoreboardService.setCurrentScoreboard(scoreboard);
             return true;
         }
+
         int redScoreLast = currentScoreboard.getRedTeamScore();
         int blueScoreLast = currentScoreboard.getBlueTeamScore();
         int redScore = scoreboard.getRedTeamScore();

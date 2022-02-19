@@ -19,6 +19,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
     private final RconDataConverter rconDataConverter;
     private final PlayerService playerService;
     private final RCONClient rconClient;
+    private Scoreboard currentScoreboard;
 
     public ScoreboardServiceImpl(ScoreboardRepository scoreboardRepository, RCONClient rconClient,
                                  RconDataConverter rconDataConverter, PlayerService playerService){
@@ -29,11 +30,21 @@ public class ScoreboardServiceImpl implements ScoreboardService {
     }
 
     @Override
-    public Scoreboard getScoreboard() throws IOException {
+    public Scoreboard getScoreboardFromRCON() throws IOException {
         List<PlayerInfoDto> players = playerService.getCurrentPlayersFromServer();
         ServerInfoCommand serverInfoCommand = rconClient.send(new ServerInfoCommand(), ServerInfoCommand.class);
         ServerInfoDto serverInfo = serverInfoCommand.getServerInfo();
         return rconDataConverter.convertScoreboard(players, serverInfo);
+    }
+
+    @Override
+    public Scoreboard getCurrentScoreboard() {
+        return currentScoreboard;
+    }
+
+    @Override
+    public void setCurrentScoreboard(Scoreboard scoreboard) {
+        this.currentScoreboard = scoreboard;
     }
 
     @Override

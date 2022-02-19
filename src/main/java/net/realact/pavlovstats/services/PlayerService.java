@@ -8,9 +8,11 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PlayerService {
-    List<Player> getPlayers() throws IOException;
+    List<Player> getPlayersFromRCON() throws IOException;
 
     List<PlayerInfoDto> getCurrentPlayersFromServer() throws IOException;
+
+    List<Player> getAllPlayers();
 
     void updatePlayerStats(Scoreboard scoreboard, Scoreboard previousScoreboard);
 

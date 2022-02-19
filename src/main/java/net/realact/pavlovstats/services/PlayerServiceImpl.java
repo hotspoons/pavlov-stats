@@ -29,7 +29,7 @@ public class PlayerServiceImpl implements PlayerService{
     }
 
     @Override
-    public List<Player> getPlayers() throws IOException{
+    public List<Player> getPlayersFromRCON() throws IOException{
         return rconDataConverter.convertPlayers(this.getCurrentPlayersFromServer());
     }
 
@@ -47,6 +47,15 @@ public class PlayerServiceImpl implements PlayerService{
         }
         return playerInfoList;
     }
+
+    @Override
+    public List<Player> getAllPlayers() {
+        List<Player> rankedPlayers = new ArrayList<>();
+        for(Player player: playerRepository.findAll()){
+            rankedPlayers.add(player);
+        }
+        Collections.sort(rankedPlayers, rconDataConverter.getKdaComparator());
+        return rankedPlayers;    }
 
     @Override
     public void updatePlayerStats(Scoreboard scoreboard, Scoreboard previousScoreboard) {
@@ -108,14 +117,5 @@ public class PlayerServiceImpl implements PlayerService{
             player.setGames(player.getGames() + 1);
             playerRepository.save(player);
         }
-    }
-
-    public List<Player> getRankedList(){
-        List<Player> rankedPlayers = new ArrayList<>();
-        for(Player player: playerRepository.findAll()){
-            rankedPlayers.add(player);
-        }
-        Collections.sort(rankedPlayers, rconDataConverter.getKdaComparator());
-        return rankedPlayers;
     }
 }
