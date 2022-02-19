@@ -12,7 +12,10 @@ public interface PlayerService {
 
     List<PlayerInfoDto> getCurrentPlayersFromServer() throws IOException;
 
-    void updatePlayerStats(Scoreboard scoreboard);
+    void updatePlayerStats(Scoreboard scoreboard, Scoreboard previousScoreboard);
 
     void updateGamesPlayed(Scoreboard scoreboard);
+
+    Player getPlayerByUuid(String uuid);
+
 }

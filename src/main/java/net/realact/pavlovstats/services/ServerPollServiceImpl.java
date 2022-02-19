@@ -36,7 +36,7 @@ public class ServerPollServiceImpl implements ServerPollService{
             if(!this.isSameScoreboard(scoreboard)){
                 scoreboardService.saveScoreboard(scoreboard);
             }
-            playerService.updatePlayerStats(scoreboard);
+            playerService.updatePlayerStats(scoreboard, currentScoreboard);
             this.currentScoreboard = scoreboard;
         } catch (IOException e) {
             logger.error(e.getMessage());

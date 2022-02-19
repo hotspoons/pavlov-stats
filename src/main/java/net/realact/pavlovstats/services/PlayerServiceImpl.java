@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -48,13 +49,53 @@ public class PlayerServiceImpl implements PlayerService{
     }
 
     @Override
-    public void updatePlayerStats(Scoreboard scoreboard) {
+    public void updatePlayerStats(Scoreboard scoreboard, Scoreboard previousScoreboard) {
+
         for(Player player: scoreboard.getBlueTeam()){
+            for(Player previousPlayer: previousScoreboard.getBlueTeam()){
+                if(player.getUuid().equalsIgnoreCase(previousPlayer.getUuid())){
+                    savePlayer(player, previousPlayer, false);
+                }
+            }
+
             playerRepository.save(player);
         }
         for(Player player: scoreboard.getRedTeam()){
             playerRepository.save(player);
         }
+    }
+
+    private void savePlayer(Player player, Player previousPlayer, boolean force){
+        int killsDelta = 0;
+        int deathsDelta = 0;
+        int assistsDelta = 0;
+        player.setLastPlayed(new Date());
+        if(player.getDeaths() != previousPlayer.getDeaths()){
+            killsDelta = player.getKills() - previousPlayer.getKills();
+            deathsDelta = player.getDeaths() - previousPlayer.getDeaths();
+            assistsDelta = player.getAssists() - previousPlayer.getAssists();
+            if((killsDelta + deathsDelta + assistsDelta) != 0){
+                force = true;
+            }
+        }
+        Player loadedPlayer = getPlayerByUuid(player.getUuid());
+        if(loadedPlayer != null){
+            player.setKills(loadedPlayer.getKills() + killsDelta);
+            player.setDeaths(loadedPlayer.getDeaths() + deathsDelta);
+            player.setAssists(loadedPlayer.getAssists() + assistsDelta);
+            if((killsDelta + deathsDelta + assistsDelta) != 0 || force == true){
+                playerRepository.save(player);
+            }
+        }
+        // New Player!
+        else{
+            playerRepository.save(player);
+        }
+    }
+
+    @Override
+    public Player getPlayerByUuid(String uuid){
+        return playerRepository.findById(uuid).get();
     }
 
     @Override
