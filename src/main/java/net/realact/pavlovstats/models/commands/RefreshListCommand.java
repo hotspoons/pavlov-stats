@@ -1,12 +1,10 @@
 package net.realact.pavlovstats.models.commands;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.realact.pavlovstats.models.dtos.PlayerDto;
-import org.springframework.stereotype.Service;
+import net.realact.pavlovstats.models.dtos.rcon.PlayerDto;
 
 import java.util.List;
 
-@Service
 public class RefreshListCommand extends Command {
     private List<PlayerDto> playerList;
 

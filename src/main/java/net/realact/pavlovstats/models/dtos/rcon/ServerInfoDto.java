@@ -1,4 +1,4 @@
-package net.realact.pavlovstats.models.dtos;
+package net.realact.pavlovstats.models.dtos.rcon;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

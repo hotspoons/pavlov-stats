@@ -1,10 +1,8 @@
 package net.realact.pavlovstats.models.commands;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.realact.pavlovstats.models.dtos.ServerInfoDto;
-import org.springframework.stereotype.Service;
+import net.realact.pavlovstats.models.dtos.rcon.ServerInfoDto;
 
-@Service
 public class ServerInfoCommand extends Command {
     private ServerInfoDto serverInfo;
     public ServerInfoCommand(){

@@ -1,7 +1,7 @@
 package net.realact.pavlovstats.models.commands;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.realact.pavlovstats.models.dtos.PlayerInfoDto;
+import net.realact.pavlovstats.models.dtos.rcon.PlayerInfoDto;
 
 import java.util.Arrays;
 

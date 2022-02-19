@@ -88,8 +88,8 @@ public class RCONClientImpl implements RCONClient{
             return responseObject;
         }
         catch(JsonProcessingException e){
-            logger.error("Could not deserialize response, got this garbage instead: " + response);
-            return (T) command;
+            logger.error("Could not deserialize response, got this garbage instead: '" + response + "'");
+            throw e;
         }
     }
 
@@ -97,16 +97,16 @@ public class RCONClientImpl implements RCONClient{
         long start = new Date().getTime();
         StringBuilder response = new StringBuilder();
         InputStream inputStream = this.clientSocket.getInputStream();
+        int c;
         do{
-            int c = inputStream.read();
+            c = inputStream.read();
             if (c > -1){
                 response.append((char) c);
             }
-            else throw new EOFException();
         }
-        while (inputStream.available() > 0);
+        while (c > 0 && inputStream.available() > 0);
         String responseString = response.toString();
-         //logger.info("getResponse took " + (new Date().getTime() - start) + " ms and contained: \n\n" + responseString);
+         logger.info("getResponse took " + (new Date().getTime() - start) + " ms");
         return responseString;
     }
 
