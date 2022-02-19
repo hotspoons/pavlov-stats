@@ -40,6 +40,12 @@ public class ServerPollServiceImpl implements ServerPollService{
             this.currentScoreboard = scoreboard;
         } catch (IOException e) {
             logger.error(e.getMessage());
+            // If we get an IOException, reset the connection, it could be transient
+            try {
+                rconClient.close();
+            } catch (IOException ex) {
+                logger.error(ex.getMessage());
+            }
             e.printStackTrace();
         }
     }

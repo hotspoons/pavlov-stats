@@ -61,7 +61,12 @@ public class RCONClientImpl implements RCONClient{
     @Override
     public void close(){
         if(this.isConnected()){
-            this.close();
+            try {
+                this.clientSocket.close();
+                this.clientSocket = null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
