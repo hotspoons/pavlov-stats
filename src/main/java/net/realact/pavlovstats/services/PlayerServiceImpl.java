@@ -55,22 +55,27 @@ public class PlayerServiceImpl implements PlayerService{
             rankedPlayers.add(player);
         }
         Collections.sort(rankedPlayers, rconDataConverter.getKdaComparator());
-        return rankedPlayers;    }
+        return rankedPlayers;
+    }
 
     @Override
     public void updatePlayerStats(Scoreboard scoreboard, Scoreboard previousScoreboard) {
-
+        // Go through both lists in case someone swapped teams since the last sample
         for(Player player: scoreboard.getBlueTeam()){
-            for(Player previousPlayer: previousScoreboard.getBlueTeam()){
-                if(player.getUuid().equalsIgnoreCase(previousPlayer.getUuid())){
-                    savePlayer(player, previousPlayer, false);
-                }
-            }
-
-            playerRepository.save(player);
+            findAndSavePlayer(previousScoreboard.getRedTeam(), player);
+            findAndSavePlayer(previousScoreboard.getBlueTeam(), player);
         }
         for(Player player: scoreboard.getRedTeam()){
-            playerRepository.save(player);
+            findAndSavePlayer(previousScoreboard.getRedTeam(), player);
+            findAndSavePlayer(previousScoreboard.getBlueTeam(), player);
+        }
+    }
+
+    private void findAndSavePlayer(List<Player> playerList, Player player){
+        for(Player previousPlayer: playerList){
+            if(player.getUuid().equalsIgnoreCase(previousPlayer.getUuid())){
+                savePlayer(player, previousPlayer, false);
+            }
         }
     }
 
@@ -109,12 +114,25 @@ public class PlayerServiceImpl implements PlayerService{
 
     @Override
     public void updateGamesPlayed(Scoreboard scoreboard) {
+        List<Player> allPlayers = getAllPlayers();
         for(Player player: scoreboard.getBlueTeam()){
-            player.setGames(player.getGames() + 1);
-            playerRepository.save(player);
+            incrementGamesAndSave(player);
+
         }
         for(Player player: scoreboard.getRedTeam()){
-            player.setGames(player.getGames() + 1);
+            incrementGamesAndSave(player);
+        }
+    }
+
+    private void incrementGamesAndSave(Player player) {
+        Player loadedPlayer = getPlayerByUuid(player.getUuid());
+        if(loadedPlayer != null){
+            loadedPlayer.setGames(loadedPlayer.getGames() + 1);
+            playerRepository.save(loadedPlayer);
+        }
+        // Corner case, brand new player!
+        else{
+            player.setGames(1);
             playerRepository.save(player);
         }
     }
