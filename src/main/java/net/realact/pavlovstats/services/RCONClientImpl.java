@@ -34,7 +34,6 @@ public class RCONClientImpl implements RCONClient{
     private String host;
     private int port;
     private String password;
-    private boolean connected;
 
 
     private Socket clientSocket;
@@ -126,18 +125,15 @@ public class RCONClientImpl implements RCONClient{
     }
 
     private void connect() throws IOException {
-        if(this.connected == false){
-            this.clientSocket = new Socket(this.host, this.port);
-            this.writer = new PrintWriter(this.clientSocket.getOutputStream(), true);
-            String response = this.getResponse();
+        this.clientSocket = new Socket(this.host, this.port);
+        this.writer = new PrintWriter(this.clientSocket.getOutputStream(), true);
+        String response = this.getResponse();
 
-            if(response.contains("Password")){
-                this.auth();
-            }
-            else{
-                throw new IOException("Did not get expected greeting, got this instead: " + response);
-            }
-
+        if(response.contains("Password")){
+            this.auth();
+        }
+        else{
+            throw new IOException("Did not get expected greeting, got this instead: " + response);
         }
     }
 
