@@ -1,6 +1,7 @@
 package net.realact.pavlovstats.services;
 
 import net.realact.pavlovstats.models.dtos.Player;
+import net.realact.pavlovstats.models.dtos.RequestResponse;
 import net.realact.pavlovstats.models.dtos.Scoreboard;
 import net.realact.pavlovstats.models.dtos.rcon.PlayerInfoDto;
 
@@ -19,5 +20,7 @@ public interface PlayerService {
     void updateGamesPlayed(Scoreboard scoreboard);
 
     Player getPlayerByUuid(String uuid);
+
+    void sortPlayers(RequestResponse.Sort sort, boolean ascending, List<Player> filteredResults);
 
 }

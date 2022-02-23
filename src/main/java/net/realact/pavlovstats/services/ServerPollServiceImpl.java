@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Date;
 
 @Service
 public class ServerPollServiceImpl implements ServerPollService{
@@ -34,6 +35,7 @@ public class ServerPollServiceImpl implements ServerPollService{
             Scoreboard scoreboard = scoreboardService.getScoreboardFromRCON();
             if(!this.isSameScoreboard(scoreboard)){
                 scoreboardService.saveScoreboard(scoreboard);
+                scoreboard.setStarted(new Date());
             }
             playerService.updatePlayerStats(scoreboard, scoreboardService.getCurrentScoreboard());
             scoreboardService.setCurrentScoreboard(scoreboard);
@@ -45,7 +47,7 @@ public class ServerPollServiceImpl implements ServerPollService{
             } catch (IOException ex) {
                 logger.error(ex.getMessage());
             }
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -56,6 +58,7 @@ public class ServerPollServiceImpl implements ServerPollService{
     private boolean isSameScoreboard(Scoreboard scoreboard) {
         Scoreboard currentScoreboard = scoreboardService.getCurrentScoreboard();
         if(currentScoreboard == null){
+            scoreboard.setStarted(new Date());
             scoreboardService.setCurrentScoreboard(scoreboard);
             return true;
         }

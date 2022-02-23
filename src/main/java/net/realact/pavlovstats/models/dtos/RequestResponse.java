@@ -6,8 +6,22 @@ public class RequestResponse<T> {
     private int offset;
     private int amount;
     private int resultCount;
+    private Sort sort;
+    private boolean ascending;
+    private String q;
     private List<T> results;
 
+
+
+    public enum Sort{
+        KDA,
+        DKA,
+        ADK,
+        KDR,
+        LAST_PLAYED,
+        GAMES,
+        NAME
+    }
     public int getOffset() {
         return offset;
     }
@@ -30,6 +44,30 @@ public class RequestResponse<T> {
 
     public void setResultCount(int resultCount) {
         this.resultCount = resultCount;
+    }
+
+    public Sort getSort() {
+        return sort;
+    }
+
+    public void setSort(Sort sort) {
+        this.sort = sort;
+    }
+
+    public boolean isAscending() {
+        return ascending;
+    }
+
+    public void setAscending(boolean ascending) {
+        this.ascending = ascending;
+    }
+
+    public String getQ() {
+        return q;
+    }
+
+    public void setQ(String q) {
+        this.q = q;
     }
 
     public List<T> getResults() {

@@ -17,8 +17,10 @@ public class Player {
     private int kills;
     private int deaths;
     private int assists;
+    private float kdr = -1F;
     private int games;
     private Date lastPlayed;
+
 
     public String getUuid() {
         return uuid;
@@ -74,5 +76,17 @@ public class Player {
 
     public void setLastPlayed(Date lastPlayed) {
         this.lastPlayed = lastPlayed;
+    }
+
+    public float getKdr() {
+        if(this.kdr == -1F){
+            this.kdr = deaths != 0 ? (float) kills / (float) deaths :
+                    deaths;
+        }
+        return kdr;
+    }
+
+    public void setKdr(float kdr) {
+        this.kdr = kdr;
     }
 }

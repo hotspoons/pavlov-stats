@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
+import java.util.Date;
 import java.util.List;
 
 @RedisHash("Scoreboard")
@@ -14,11 +15,13 @@ public class Scoreboard {
     private String id;
     private String mapName;
     private String gameMode;
-    private String playerCount;
+    private int playerCount;
     private int redTeamScore;
     private int blueTeamScore;
     private List<Player> redTeam;
     private List<Player> blueTeam;
+    private Date started;
+    private Date concluded;
 
     public String getMapName() {
         return mapName;
@@ -36,11 +39,11 @@ public class Scoreboard {
         this.gameMode = gameMode;
     }
 
-    public String getPlayerCount() {
+    public int getPlayerCount() {
         return playerCount;
     }
 
-    public void setPlayerCount(String playerCount) {
+    public void setPlayerCount(int playerCount) {
         this.playerCount = playerCount;
     }
 
@@ -83,4 +86,21 @@ public class Scoreboard {
     public void setId(String id) {
         this.id = id;
     }
+
+    public Date getStarted() {
+        return started;
+    }
+
+    public void setStarted(Date started) {
+        this.started = started;
+    }
+
+    public Date getConcluded() {
+        return concluded;
+    }
+
+    public void setConcluded(Date concluded) {
+        this.concluded = concluded;
+    }
+
 }

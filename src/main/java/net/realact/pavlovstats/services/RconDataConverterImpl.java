@@ -38,7 +38,7 @@ public class RconDataConverterImpl implements RconDataConverter {
     public Scoreboard convertScoreboard(List<PlayerInfoDto> rconPlayers, ServerInfoDto serverInfoDto) {
         Scoreboard scoreboard = new Scoreboard();
         scoreboard.setGameMode(serverInfoDto.getGameMode());
-        scoreboard.setPlayerCount(serverInfoDto.getPlayerCount());
+        scoreboard.setPlayerCount(Integer.parseInt(serverInfoDto.getPlayerCount()));
         scoreboard.setMapName(serverInfoDto.getMapLabel());
         scoreboard.setRedTeamScore(Integer.parseInt(serverInfoDto.getTeam0Score()));
         scoreboard.setBlueTeamScore(Integer.parseInt(serverInfoDto.getTeam1Score()));
@@ -54,25 +54,8 @@ public class RconDataConverterImpl implements RconDataConverter {
         }
         scoreboard.setRedTeam(convertPlayers(redTeam));
         scoreboard.setBlueTeam(convertPlayers(blueTeam));
-        Collections.sort(scoreboard.getRedTeam(), getKdaComparator());
-        Collections.sort(scoreboard.getBlueTeam(), getKdaComparator());
         return scoreboard;
     }
 
-    @Override
-    public Comparator<Player> getKdaComparator() {
-        Comparator<Player> comparator = new Comparator<Player>() {
-            @Override
-            public int compare(Player o1, Player o2) {
-                int kills = o1.getKills() - o2.getKills();
-                if(kills == 0){
-                    // If kills are equal, sort by who has the least deaths
-                    return o2.getDeaths() - o1.getDeaths();
-                }
-                return kills;
-            }
-        };
-        return comparator;
-    }
 
 }

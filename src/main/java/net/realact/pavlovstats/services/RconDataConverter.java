@@ -12,6 +12,4 @@ public interface RconDataConverter {
     List<Player> convertPlayers(List<PlayerInfoDto> rconPlayers);
     Player convertPlayer(PlayerInfoDto rconPlayer);
     Scoreboard convertScoreboard(List<PlayerInfoDto> rconPlayers, ServerInfoDto serverInfoDto);
-
-    Comparator<Player> getKdaComparator();
 }

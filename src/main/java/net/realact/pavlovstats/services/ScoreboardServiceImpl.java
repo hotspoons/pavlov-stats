@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +51,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
     @Override
     public void saveScoreboard(Scoreboard scoreboard) {
         scoreboard.setId(UUID.randomUUID().toString());
+        scoreboard.setConcluded(new Date());
         scoreboardRepository.save(scoreboard);
         playerService.updateGamesPlayed(scoreboard);
     }
