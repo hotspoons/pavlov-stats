@@ -1,5 +1,6 @@
 package net.realact.pavlovstats.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lettuce.core.RedisURI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,11 @@ public class RedisConfig {
         config.setPassword(appConfig.getRedisPassword());
 
         return new LettuceConnectionFactory(config);
+    }
+
+    @Bean
+    public ObjectMapper getObjectMapper() {
+        return new ObjectMapper();
     }
 
     @Bean

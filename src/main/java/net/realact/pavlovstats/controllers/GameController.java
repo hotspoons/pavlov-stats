@@ -5,16 +5,11 @@ import net.realact.pavlovstats.models.dtos.RequestResponse;
 import net.realact.pavlovstats.models.dtos.Scoreboard;
 import net.realact.pavlovstats.services.PlayerService;
 import net.realact.pavlovstats.services.ScoreboardService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-@RestController
+//@RestController
 public class GameController {
 
     private final PlayerService playerService;
@@ -26,17 +21,17 @@ public class GameController {
 
     }
 
-    @GetMapping("/scoreboard")
-    @CrossOrigin
+    //@GetMapping("/scoreboard")
+    //@CrossOrigin
     public Scoreboard getScoreboard(){
         return scoreboardService.getCurrentScoreboard();
     }
 
-    @CrossOrigin
-    @GetMapping("/leaderboard")
-    public RequestResponse<Player> getPlayerStats(@RequestParam(required = false) String steamId,
-                                                  @RequestParam int offset,
-                                                  @RequestParam int amount){
+    //@CrossOrigin
+    //@GetMapping("/leaderboard")
+    public RequestResponse<Player> getPlayerStats(/*@RequestParam(required = false)*/ String steamId,
+                                                  /*@RequestParam*/ int offset,
+                                                  /*@RequestParam*/ int amount){
         RequestResponse<Player> response = new RequestResponse<>();
         response.setOffset(offset);
         response.setAmount(amount);
