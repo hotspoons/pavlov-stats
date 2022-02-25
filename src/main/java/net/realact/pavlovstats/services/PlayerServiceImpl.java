@@ -115,6 +115,14 @@ public class PlayerServiceImpl implements PlayerService{
             player.setKills(loadedPlayer.getKills() + killsDelta);
             player.setDeaths(loadedPlayer.getDeaths() + deathsDelta);
             player.setAssists(loadedPlayer.getAssists() + assistsDelta);
+            // Track old names
+            if(!player.getPlayerName().equalsIgnoreCase(loadedPlayer.getPlayerName())){
+                if(player.getPreviousNames() == null){
+                    player.setPreviousNames(new ArrayList<>());
+                }
+                player.getPreviousNames().add(loadedPlayer.getPlayerName());
+                force = true;
+            }
             if((killsDelta + deathsDelta + assistsDelta) != 0 || force == true){
                 playerRepository.save(player);
             }
@@ -283,6 +291,7 @@ public class PlayerServiceImpl implements PlayerService{
         Player loadedPlayer = getPlayerByUuid(player.getUuid());
         if(loadedPlayer != null){
             loadedPlayer.setGames(loadedPlayer.getGames() + 1);
+            loadedPlayer.setLastPlayed(new Date());
             playerRepository.save(loadedPlayer);
         }
         // Corner case, brand new player!

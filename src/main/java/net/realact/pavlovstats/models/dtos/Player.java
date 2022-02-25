@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import java.util.Date;
+import java.util.List;
 
 @RedisHash("Player")
 public class Player {
@@ -20,6 +21,7 @@ public class Player {
     private float kdr = -1F;
     private int games;
     private Date lastPlayed;
+    private List<String> previousNames;
 
 
     public String getUuid() {
@@ -88,5 +90,13 @@ public class Player {
 
     public void setKdr(float kdr) {
         this.kdr = kdr;
+    }
+
+    public List<String> getPreviousNames() {
+        return previousNames;
+    }
+
+    public void setPreviousNames(List<String> previousNames) {
+        this.previousNames = previousNames;
     }
 }
