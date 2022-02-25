@@ -1,6 +1,7 @@
 package net.realact.pavlovstats.services;
 
 import net.realact.pavlovstats.models.commands.ServerInfoCommand;
+import net.realact.pavlovstats.models.dtos.Player;
 import net.realact.pavlovstats.models.dtos.Scoreboard;
 import net.realact.pavlovstats.models.dtos.rcon.PlayerInfoDto;
 import net.realact.pavlovstats.models.dtos.rcon.ServerInfoDto;
@@ -8,10 +9,7 @@ import net.realact.pavlovstats.repositories.ScoreboardRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ScoreboardServiceImpl implements ScoreboardService {
@@ -67,6 +65,53 @@ public class ScoreboardServiceImpl implements ScoreboardService {
         List<Scoreboard> scoreboards = new ArrayList<>();
         for(Scoreboard scoreboard: all){
             scoreboards.add(scoreboard);
+        }
+        return scoreboards;
+    }
+
+    @Override
+    public List<Scoreboard> searchByNameAndDate(String name, Date start, Date end) {
+        Iterable<Scoreboard> all = scoreboardRepository.findAll();
+        List<Scoreboard> scoreboards = new ArrayList<>();
+        for(Scoreboard scoreboard: all){
+            Boolean nameHit = null;
+            Boolean dateHit = null;
+            if(name != null && name.trim().isEmpty() == false){
+                nameHit = false;
+                if(scoreboard.getRedTeam() != null){
+                    for(Player player: scoreboard.getRedTeam()){
+                        if(player.getPlayerName().toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT))){
+                            nameHit = true;
+                            break;
+                        }
+                    }
+                }
+                if(scoreboard.getBlueTeam() != null){
+                    for(Player player: scoreboard.getBlueTeam()){
+                        if(player.getPlayerName().toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT))){
+                            nameHit = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if(start != null && end != null){
+                dateHit = false;
+                if(scoreboard.getStarted().before(end) && scoreboard.getConcluded().after(start)){
+                    dateHit = true;
+                }
+            }
+            // If neither name or date hit was initialized, then add all
+            if(nameHit == null && dateHit == null){
+                scoreboards.add(scoreboard);
+            }
+            // If one or the other was true and the other was null, or if both were true,
+            // add the value
+            else if((nameHit == null && dateHit == true) || (nameHit == true && dateHit == null)
+                    || (nameHit == true && dateHit == true)){
+                scoreboards.add(scoreboard);
+            }
+
         }
         return scoreboards;
     }

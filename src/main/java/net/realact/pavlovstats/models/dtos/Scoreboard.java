@@ -15,13 +15,13 @@ public class Scoreboard {
     private String id;
     private String mapName;
     private String gameMode;
-    private int playerCount;
+    private String playerCount;
     private int redTeamScore;
     private int blueTeamScore;
-    private List<Player> redTeam;
-    private List<Player> blueTeam;
     private Date started;
     private Date concluded;
+    private List<Player> redTeam;
+    private List<Player> blueTeam;
 
     public String getMapName() {
         return mapName;
@@ -39,11 +39,11 @@ public class Scoreboard {
         this.gameMode = gameMode;
     }
 
-    public int getPlayerCount() {
+    public String getPlayerCount() {
         return playerCount;
     }
 
-    public void setPlayerCount(int playerCount) {
+    public void setPlayerCount(String playerCount) {
         this.playerCount = playerCount;
     }
 
@@ -63,21 +63,6 @@ public class Scoreboard {
         this.blueTeamScore = blueTeamScore;
     }
 
-    public List<Player> getRedTeam() {
-        return redTeam;
-    }
-
-    public void setRedTeam(List<Player> redTeam) {
-        this.redTeam = redTeam;
-    }
-
-    public List<Player> getBlueTeam() {
-        return blueTeam;
-    }
-
-    public void setBlueTeam(List<Player> blueTeam) {
-        this.blueTeam = blueTeam;
-    }
 
     public String getId() {
         return id;
@@ -103,4 +88,19 @@ public class Scoreboard {
         this.concluded = concluded;
     }
 
+    public List<Player> getRedTeam() {
+        return redTeam;
+    }
+
+    public void setRedTeam(List<Player> redTeam) {
+        this.redTeam = redTeam;
+    }
+
+    public List<Player> getBlueTeam() {
+        return blueTeam;
+    }
+
+    public void setBlueTeam(List<Player> blueTeam) {
+        this.blueTeam = blueTeam;
+    }
 }

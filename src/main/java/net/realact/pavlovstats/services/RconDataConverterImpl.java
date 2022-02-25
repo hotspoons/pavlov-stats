@@ -38,7 +38,7 @@ public class RconDataConverterImpl implements RconDataConverter {
     public Scoreboard convertScoreboard(List<PlayerInfoDto> rconPlayers, ServerInfoDto serverInfoDto) {
         Scoreboard scoreboard = new Scoreboard();
         scoreboard.setGameMode(serverInfoDto.getGameMode());
-        scoreboard.setPlayerCount(Integer.parseInt(serverInfoDto.getPlayerCount()));
+        scoreboard.setPlayerCount(serverInfoDto.getPlayerCount());
         scoreboard.setMapName(serverInfoDto.getMapLabel());
         scoreboard.setRedTeamScore(Integer.parseInt(serverInfoDto.getTeam0Score()));
         scoreboard.setBlueTeamScore(Integer.parseInt(serverInfoDto.getTeam1Score()));
