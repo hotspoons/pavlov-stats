@@ -93,6 +93,7 @@ public class PlayerServiceImpl implements PlayerService{
         for(Player previousPlayer: playerList){
             if(player.getUuid().equalsIgnoreCase(previousPlayer.getUuid())){
                 savePlayer(player, previousPlayer, false);
+                break;
             }
         }
     }
@@ -102,29 +103,30 @@ public class PlayerServiceImpl implements PlayerService{
         int deathsDelta = 0;
         int assistsDelta = 0;
         player.setLastPlayed(new Date());
-        if(player.getDeaths() != previousPlayer.getDeaths()){
-            killsDelta = player.getKills() - previousPlayer.getKills();
-            deathsDelta = player.getDeaths() - previousPlayer.getDeaths();
-            assistsDelta = player.getAssists() - previousPlayer.getAssists();
-            if((killsDelta + deathsDelta + assistsDelta) != 0){
-                force = true;
-            }
-        }
+
+        killsDelta = player.getKills() - previousPlayer.getKills();
+        deathsDelta = player.getDeaths() - previousPlayer.getDeaths();
+        assistsDelta = player.getAssists() - previousPlayer.getAssists();
         Player loadedPlayer = getPlayerByUuid(player.getUuid());
         if(loadedPlayer != null){
-            player.setKills(loadedPlayer.getKills() + killsDelta);
-            player.setDeaths(loadedPlayer.getDeaths() + deathsDelta);
-            player.setAssists(loadedPlayer.getAssists() + assistsDelta);
+            loadedPlayer.setKills(loadedPlayer.getKills() + killsDelta);
+            loadedPlayer.setDeaths(loadedPlayer.getDeaths() + deathsDelta);
+            loadedPlayer.setAssists(loadedPlayer.getAssists() + assistsDelta);
             // Track old names
             if(!player.getPlayerName().equalsIgnoreCase(loadedPlayer.getPlayerName())){
-                if(player.getPreviousNames() == null){
-                    player.setPreviousNames(new ArrayList<>());
+                if(loadedPlayer.getPreviousNames() == null){
+                    loadedPlayer.setPreviousNames(new ArrayList<>());
                 }
-                player.getPreviousNames().add(loadedPlayer.getPlayerName());
+                loadedPlayer.getPreviousNames().add(loadedPlayer.getPlayerName());
+                loadedPlayer.setPlayerName(player.getPlayerName());
                 force = true;
             }
+            if(killsDelta < 0 || deathsDelta < 0 || assistsDelta < 0){
+                // If we are negative, it means our delta is against an old round, so skip
+                return;
+            }
             if((killsDelta + deathsDelta + assistsDelta) != 0 || force == true){
-                playerRepository.save(player);
+                playerRepository.save(loadedPlayer);
             }
         }
         // New Player!
@@ -135,7 +137,7 @@ public class PlayerServiceImpl implements PlayerService{
 
     @Override
     public Player getPlayerByUuid(String uuid){
-        return playerRepository.findById(uuid).get();
+        return playerRepository.findById(uuid).isEmpty() ? null : playerRepository.findById(uuid).get();
     }
 
     @Override

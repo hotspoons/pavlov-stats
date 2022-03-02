@@ -19,6 +19,7 @@ public class AppConfig {
     private String redisHost;
     private String redisPassword;
     private String redisWorkingDir;
+    private String redisHashSuffix;
 
     public String getRconHost() {
         return rconHost;
@@ -98,5 +99,13 @@ public class AppConfig {
 
     public void setServerPollingInterval(int serverPollingInterval) {
         this.serverPollingInterval = serverPollingInterval;
+    }
+
+    public String getRedisHashSuffix() {
+        return redisHashSuffix;
+    }
+
+    public void setRedisHashSuffix(String redisHashSuffix) {
+        this.redisHashSuffix = redisHashSuffix;
     }
 }

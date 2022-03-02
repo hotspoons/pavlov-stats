@@ -19,6 +19,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
     private final PlayerService playerService;
     private final RCONClient rconClient;
     private Scoreboard currentScoreboard;
+    private Scoreboard lastScoreboard;
 
     public ScoreboardServiceImpl(ScoreboardRepository scoreboardRepository, RCONClient rconClient,
                                  RconDataConverter rconDataConverter, PlayerService playerService){
@@ -38,7 +39,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
 
     @Override
     public Scoreboard getCurrentScoreboard() {
-        return currentScoreboard;
+        return this.markChanges();
     }
 
     @Override
@@ -115,4 +116,45 @@ public class ScoreboardServiceImpl implements ScoreboardService {
         }
         return scoreboards;
     }
+
+
+    private Scoreboard markChanges() {
+        if(currentScoreboard != null && lastScoreboard != null) {
+            List<Player> allCurrentPlayers = new ArrayList<>();
+            List<Player> allLastPlayers = new ArrayList<>();
+            if(currentScoreboard.getBlueTeam() != null){
+               allCurrentPlayers.addAll(currentScoreboard.getBlueTeam());
+            }
+            if(lastScoreboard.getRedTeam() != null){
+                allCurrentPlayers.addAll(currentScoreboard.getRedTeam());
+            }
+            if(lastScoreboard.getBlueTeam() != null){
+                allLastPlayers.addAll(lastScoreboard.getBlueTeam());
+            }
+            if(lastScoreboard.getRedTeam() != null){
+                allLastPlayers.addAll(lastScoreboard.getRedTeam());
+            }
+            // Highlight new players since the last refresh
+            for(Player newPlayer: allCurrentPlayers){
+                boolean isNew = true;
+                boolean hasDelta = false;
+
+                for(Player lastPlayer: allLastPlayers){
+                    if(lastPlayer.getUuid().equalsIgnoreCase(newPlayer.getUuid())){
+                        isNew = false;
+                        hasDelta = (lastPlayer.getKills() != newPlayer.getKills()) ||
+                                (lastPlayer.getDeaths() != newPlayer.getDeaths())  ||
+                                (lastPlayer.getAssists() != newPlayer.getAssists());
+                        break;
+                    }
+                }
+                if(isNew == true || hasDelta == true){
+                    newPlayer.setChanged(true);
+                }
+            }
+        }
+        lastScoreboard = currentScoreboard;
+        return currentScoreboard;
+    }
+
 }

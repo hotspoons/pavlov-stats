@@ -1,13 +1,14 @@
 package net.realact.pavlovstats.models.dtos;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import java.util.Date;
 import java.util.List;
 
-@RedisHash("Player")
+@RedisHash("Player-${appconfig.redis-hash-suffix}")
 public class Player {
 
     @Id
@@ -22,6 +23,8 @@ public class Player {
     private int games;
     private Date lastPlayed;
     private List<String> previousNames;
+    @Transient
+    private boolean changed;
 
 
     public String getUuid() {
@@ -98,5 +101,13 @@ public class Player {
 
     public void setPreviousNames(List<String> previousNames) {
         this.previousNames = previousNames;
+    }
+
+    public boolean isChanged() {
+        return changed;
+    }
+
+    public void setChanged(boolean changed) {
+        this.changed = changed;
     }
 }

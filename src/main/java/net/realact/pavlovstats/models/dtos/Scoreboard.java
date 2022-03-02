@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.index.Indexed;
 import java.util.Date;
 import java.util.List;
 
-@RedisHash("Scoreboard")
+@RedisHash("Scoreboard-${appconfig.redis-hash-suffix}")
 public class Scoreboard {
 
     @Id
