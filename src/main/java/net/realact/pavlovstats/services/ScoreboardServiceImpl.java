@@ -117,7 +117,6 @@ public class ScoreboardServiceImpl implements ScoreboardService {
         return scoreboards;
     }
 
-
     private Scoreboard markChanges() {
         if(currentScoreboard != null && lastScoreboard != null) {
             List<Player> allCurrentPlayers = new ArrayList<>();

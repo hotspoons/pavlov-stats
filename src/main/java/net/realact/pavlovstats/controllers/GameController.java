@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.realact.pavlovstats.models.dtos.Player;
 import net.realact.pavlovstats.models.dtos.RequestResponse;
 import net.realact.pavlovstats.models.dtos.Scoreboard;
+import net.realact.pavlovstats.services.MapNameResolver;
 import net.realact.pavlovstats.services.PlayerService;
 import net.realact.pavlovstats.services.RconDataConverter;
 import net.realact.pavlovstats.services.ScoreboardService;
@@ -23,15 +24,18 @@ public class GameController {
     private final ScoreboardService scoreboardService;
     private final RconDataConverter rconDataConverter;
     private final ObjectMapper objectMapper;
+    private final MapNameResolver mapNameResolver;
 
     public GameController(PlayerService playerService,
                           ScoreboardService scoreboardService,
                           RconDataConverter rconDataConverter,
-                          ObjectMapper objectMapper){
+                          ObjectMapper objectMapper,
+                          MapNameResolver mapNameResolver){
         this.playerService = playerService;
         this.scoreboardService = scoreboardService;
         this.rconDataConverter = rconDataConverter;
         this.objectMapper = objectMapper;
+        this.mapNameResolver = mapNameResolver;
     }
 
     // TODO scoreboard history route with date filters, pagination, and maybe username search
@@ -67,6 +71,12 @@ public class GameController {
         }
         response.setResultCount(allResults.size());
         paginate(offset, amount, response, allResults);
+        if(response.getResults() != null){
+            // Add human readable map names to the scoreboard responses
+            for(Scoreboard scoreboard: response.getResults()){
+                scoreboard.setMapDisplayName(mapNameResolver.getMapNameForWorkshopId(scoreboard.getMapName()));
+            }
+        }
         return response;
     }
 

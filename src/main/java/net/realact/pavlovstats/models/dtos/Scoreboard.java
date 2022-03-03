@@ -1,6 +1,7 @@
 package net.realact.pavlovstats.models.dtos;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
@@ -14,6 +15,8 @@ public class Scoreboard {
     @Indexed
     private String id;
     private String mapName;
+    @Transient
+    private String mapDisplayName;
     private String gameMode;
     private String playerCount;
     private int redTeamScore;
@@ -102,5 +105,13 @@ public class Scoreboard {
 
     public void setBlueTeam(List<Player> blueTeam) {
         this.blueTeam = blueTeam;
+    }
+
+    public String getMapDisplayName() {
+        return mapDisplayName;
+    }
+
+    public void setMapDisplayName(String mapDisplayName) {
+        this.mapDisplayName = mapDisplayName;
     }
 }

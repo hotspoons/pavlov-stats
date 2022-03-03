@@ -34,6 +34,7 @@ public class ServerPollServiceImpl implements ServerPollService{
         try {
             Scoreboard scoreboard = scoreboardService.getScoreboardFromRCON();
             if(!this.isSameScoreboard(scoreboard)){
+                // TODO this needs some cleanup
                 scoreboardService.saveScoreboard(scoreboard);
                 scoreboard.setStarted(new Date());
             }
@@ -50,11 +51,6 @@ public class ServerPollServiceImpl implements ServerPollService{
             logger.error(e.getMessage());
         }
     }
-
-    private void persistStats(Scoreboard scoreboard) {
-        scoreboardService.saveScoreboard(scoreboard);
-    }
-
     private boolean isSameScoreboard(Scoreboard scoreboard) {
         Scoreboard currentScoreboard = scoreboardService.getCurrentScoreboard();
         if(currentScoreboard == null){
