@@ -260,7 +260,7 @@ public class PlayerServiceImpl implements PlayerService{
                 String p1 = o1.getPlayerName() != null ?
                         o1.getPlayerName().toLowerCase(Locale.ROOT).trim() : "";
                 String p2 = o2.getPlayerName() != null ?
-                        o1.getPlayerName().toLowerCase(Locale.ROOT).trim() : "";
+                        o2.getPlayerName().toLowerCase(Locale.ROOT).trim() : "";
                 return p1.compareTo(p2);
             }
         };
